@@ -20,23 +20,23 @@ DEVICE = 'cpu' # 'cuda' if torch.cuda.is_available() else 'cpu'
 #   Define parameters manually  #
 #################################
 def define_parameters():
-    params = dict()
-    # Neural Network
-    params['epsilon_decay_linear'] = 1/100
-    params['learning_rate'] = 0.00013629
-    params['first_layer_size'] = 200    # neurons in the first layer
-    params['second_layer_size'] = 20   # neurons in the second layer
-    params['third_layer_size'] = 50    # neurons in the third layer
-    params['episodes'] = 250          
-    params['memory_size'] = 2500
-    params['batch_size'] = 1000
-    # Settings
-    params['weights_path'] = 'weights/weights.h5'
-    params['train'] = False
-    params["test"] = True
-    params['plot_score'] = True
-    params['log_path'] = 'logs/scores_' + str(datetime.datetime.now().strftime("%Y%m%d%H%M%S")) +'.txt'
-    return params
+    return {
+        'epsilon_decay_linear': 1 / 100,
+        'learning_rate': 0.00013629,
+        'first_layer_size': 200,
+        'second_layer_size': 20,
+        'third_layer_size': 50,
+        'episodes': 250,
+        'memory_size': 2500,
+        'batch_size': 1000,
+        'weights_path': 'weights/weights.h5',
+        'train': False,
+        "test": True,
+        'plot_score': True,
+        'log_path': 'logs/scores_'
+        + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        + '.txt',
+    }
 
 
 class Game:
@@ -60,8 +60,7 @@ class Player(object):
         y = 0.5 * game.game_height
         self.x = x - x % 20
         self.y = y - y % 20
-        self.position = []
-        self.position.append([self.x, self.y])
+        self.position = [[self.x, self.y]]
         self.food = 1
         self.eaten = False
         self.image = pygame.image.load('img/snakeBody.png')
@@ -149,10 +148,7 @@ def eat(player, food, game):
 
 
 def get_record(score, record):
-    if score >= record:
-        return score
-    else:
-        return record
+    return score if score >= record else record
 
 
 def display_ui(game, score, record):
@@ -194,7 +190,7 @@ def plot_seaborn(array_counter, array_score, train):
     sns.set(color_codes=True, font_scale=1.5)
     sns.set_style("white")
     plt.figure(figsize=(13,8))
-    fit_reg = False if train== False else True        
+    fit_reg = train != False
     ax = sns.regplot(
         np.array([array_counter])[0],
         np.array([array_score])[0],
