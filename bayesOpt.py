@@ -43,7 +43,7 @@ class BayesianOptimizer():
             print('Total score: {}   Mean: {}   Std dev:   {}'.format(score, mean, stdev))
             with open(self.params['log_path'], 'a') as f: 
                 f.write(str(self.params['name_scenario']) + '\n')
-                f.write('Params: ' + str(self.params) + '\n')
+                f.write(f'Params: {str(self.params)}' + '\n')
             return score
 
         optim_params = [
